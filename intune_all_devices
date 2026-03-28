@@ -1,0 +1,16 @@
+# Requires: Microsoft.Graph.Intune (install with Install-Module Microsoft.Graph.Intune -Scope CurrentUser)
+# or, for modern Graph: Install-Module Microsoft.Graph -Scope CurrentUser
+
+# Connect to Microsoft Graph with Intune permissions
+Connect-MgGraph -Scopes "DeviceManagementManagedDevices.Read.All"
+
+# Retrieve all managed devices from Intune (paging handled automatically)
+$devices = Get-MgDeviceManagementManagedDevice -All
+
+# Output device details to the console
+$devices | Select-Object Id, DeviceName, UserPrincipalName, OperatingSystem, ComplianceState, ManagementState, JoinType, LastSyncDateTime, Model, Manufacturer | Format-Table -AutoSize
+
+# Optional: Export all device details to CSV for further analysis
+$devices | Export-Csv -Path "IntuneAllDevices.csv" -NoTypeInformation -Encoding UTF8
+
+Write-Host "Device details have been saved to IntuneAllDevices.csv"
